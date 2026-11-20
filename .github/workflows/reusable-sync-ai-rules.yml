@@ -16,17 +16,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout target
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
       - name: Checkout shared standards
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: naoiw/.github
           ref: ${{ inputs.source-ref }}
           path: .naoiw-policy-source
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "26"
       - name: Sync managed blocks
@@ -34,7 +34,9 @@ jobs:
       - name: Remove temporary source checkout
         run: rm -rf .naoiw-policy-source
       - name: Create or update pull request
-        uses: peter-evans/create-pull-request@v7
+        id: open_pr
+        continue-on-error: true
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ github.token }}
           branch: chore/sync-naoiw-ai-rules
@@ -45,3 +47,15 @@ jobs:
             既存のリポジトリ固有指示は上書きしていません。
             検証後にマージしてください。
           commit-message: "chore: sync naoiw AI development rules"
+      - name: Explain blocked PR creation
+        if: steps.open_pr.outcome == 'failure'
+        shell: bash
+        env:
+          REPO: ${{ github.repository }}
+          BASE_BRANCH: ${{ github.ref_name }}
+        run: |
+          echo "### AI rule sync: pull request creation failed" >> "$GITHUB_STEP_SUMMARY"
+          echo "The sync branch was pushed, but GitHub did not create the PR." >> "$GITHUB_STEP_SUMMARY"
+          echo "Check **Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests**." >> "$GITHUB_STEP_SUMMARY"
+          echo "[Open a PR manually](https://github.com/${REPO}/compare/${BASE_BRANCH}...chore/sync-naoiw-ai-rules?expand=1)" >> "$GITHUB_STEP_SUMMARY"
+          exit 1

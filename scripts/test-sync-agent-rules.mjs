@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, writeFile, readFile, rm } from "node:fs/promises";
+import { mkdtemp, writeFile, readFile, rm, mkdir, symlink } from "node:fs/promises";
 import { join, resolve, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
@@ -57,5 +57,47 @@ test("skip unmanaged existing files rather than overwrite", async () => {
     assert.equal(await readFile(agents, "utf8"), "Existing custom guidance\n");
   } finally {
     await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test("reject malformed managed blocks before any file is overwritten", async () => {
+  const temp = await mkdtemp(join(tmpdir(), "naoiw-rules-atomic-"));
+  try {
+    const initial = await run(temp);
+    assert.equal(initial.status, 0, initial.stderr);
+    const agents = join(temp, "AGENTS.md");
+    const copilot = join(temp, ".github/copilot-instructions.md");
+    const obsolete = (await readFile(agents, "utf8")).replace("naoiw 共通AI開発規約（管理領域）", "outdated managed text");
+    await writeFile(agents, obsolete);
+    await writeFile(copilot, "<!-- naoiw:managed:start -->\ninvalid incomplete block");
+    const update = await run(temp);
+    assert.notEqual(update.status, 0);
+    assert.match(update.stderr, /invalid managed delimiters/);
+    assert.equal(await readFile(agents, "utf8"), obsolete, "no partial update before validation");
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test("never follow existing symlink targets", async () => {
+  const temp = await mkdtemp(join(tmpdir(), "naoiw-rules-symlink-"));
+  const outside = await mkdtemp(join(tmpdir(), "naoiw-rules-outside-"));
+  try {
+    await writeFile(join(outside, "AGENTS.md"), "outside instructions\n");
+    await symlink(join(outside, "AGENTS.md"), join(temp, "AGENTS.md"));
+    const result = await run(temp);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Refusing to update symlink/);
+    assert.equal(await readFile(join(outside, "AGENTS.md"), "utf8"), "outside instructions\n");
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+    await rm(outside, { recursive: true, force: true });
+  }
+});
+
+test("reject unknown or missing CLI arguments", () => {
+  for (const args of [["--unexpected"], ["--target-root"], ["--source-root", "--check"]]) {
+    const result = spawnSync(process.execPath, [script, ...args], { encoding: "utf8" });
+    assert.notEqual(result.status, 0, JSON.stringify(args));
   }
 });
