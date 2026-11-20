@@ -27,6 +27,8 @@
 - [React + TypeScript + Viteの新規プロジェクト雛形](templates/web-react)
 - [React雛形の独立と生成方法](standards/WEB_TEMPLATE.md)
 - [README・docsの標準](standards/DOCUMENTATION.md)
+- [依存・セキュリティ更新](standards/SECURITY_AUTOMATION.md)
+- [ブランチ保護・Rulesets推奨設定](standards/BRANCH_PROTECTION.md)
 - [MIT等のライセンス運用](standards/LICENSING.md)
 - [ワークフロー呼び出し例](templates/workflows)
 
