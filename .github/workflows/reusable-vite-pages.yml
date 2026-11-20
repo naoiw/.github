@@ -3,6 +3,10 @@ name: Reusable Vite GitHub Pages
 on:
   workflow_call:
     inputs:
+      dry-run:
+        description: "Build and upload a preview artifact, without deploying GitHub Pages"
+        type: boolean
+        default: false
       package-manager:
         description: "npm or pnpm"
         type: string
@@ -108,7 +112,11 @@ jobs:
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
           base="${BASE_PATH:-/$REPO_NAME/}"
-          "$PACKAGE_MANAGER" run "$BUILD_SCRIPT" -- --base="$base"
+          if [ "$PACKAGE_MANAGER" = "pnpm" ]; then
+            pnpm run "$BUILD_SCRIPT" --base="$base"
+          else
+            npm run "$BUILD_SCRIPT" -- --base="$base"
+          fi
       - name: Install preview dependencies
         if: inputs.publish-preview
         working-directory: preview
@@ -134,7 +142,11 @@ jobs:
         run: |
           base="${BASE_PATH:-/$REPO_NAME/}"
           [[ "$base" == */ ]] || base="$base/"
-          "$PACKAGE_MANAGER" run "$BUILD_SCRIPT" -- --base="${base}${PREVIEW_SUBPATH}/"
+          if [ "$PACKAGE_MANAGER" = "pnpm" ]; then
+            pnpm run "$BUILD_SCRIPT" --base="${base}${PREVIEW_SUBPATH}/"
+          else
+            npm run "$BUILD_SCRIPT" -- --base="${base}${PREVIEW_SUBPATH}/"
+          fi
       - name: Assemble single Pages artifact
         shell: bash
         env:
@@ -154,12 +166,21 @@ jobs:
           fi
           touch site/.nojekyll
           test -s site/index.html
+      - name: Upload dry-run Pages artifact
+        if: inputs.dry-run
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-dry-run
+          path: site
       - uses: actions/configure-pages@v5
+        if: ${{ !inputs.dry-run }}
       - uses: actions/upload-pages-artifact@v3
+        if: ${{ !inputs.dry-run }}
         with:
           path: site
 
   deploy:
+    if: ${{ !inputs.dry-run }}
     needs: build
     runs-on: ubuntu-latest
     permissions:

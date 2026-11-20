@@ -24,5 +24,16 @@
 - PWA・Service Worker、SPAクライアントルーティング、外部データの公開範囲、独自のビルド処理は**プロジェクト側で別途検証**する。
 - preview設定はdevelopが実在するリポジトリだけに導入。mainしかないリポジトリに無断でdevelopを作らない。
 
+## 安全な検証（dry-run）
+`reusable-vite-pages.yml` は `dry-run: true` を指定するとPagesへの公開は行わず、`pages-dry-run` という検証用Artifactだけを作ります。
+
+- Pages設定を本番へ切り替える前に、PRでビルド成果物とベースパスを確認してください。
+- **dry-runでも呼び出し側のworkflowには `contents: read`、`pages: write`、`id-token: write` の権限宣言が必要**です。再利用ワークフローには公開用ジョブが定義されているため、GitHubが呼び出し時点で権限を検査します。ただし `dry-run: true` なら公開ジョブはスキップされ、ビルドジョブは `contents: read` のみで実行します。
+- 検証実績：[geo-quiz（npm、本番ビルドのみ）](https://github.com/naoiw/geo-quiz/actions/runs/44733762022)、[cycling-map（pnpm、本番＋developビルド）](https://github.com/naoiw/cycling-map/actions/runs/44733771718)。いずれも公開ジョブがスキップされ、Artifactが正常に作成されました。
+- `dry-run` のビルドは通常mainとdevelopから取得します。PRブランチ自体の成果物を試すものではありません。
+- `publish-preview: true` を使用するのはdevelopがあるリポジトリだけです。
+- React starterの `vite build` はこの共通方式と互換です。
+- このオプションは既存Pages公開ワークフローを自動移行しません。
+
 ## 状態
 本リポジトリのワークフローは共通部品の提供であり、既存アプリへの配布・移行やPagesの公開は行いません。導入時は対象リポジトリごとにPRと動作確認を行います。
