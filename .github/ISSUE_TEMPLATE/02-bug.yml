@@ -1,0 +1,44 @@
+name: "不具合報告"
+description: "実際に発生した不具合の再現・修正"
+title: "[Bug] "
+body:
+  - type: textarea
+    id: actual
+    attributes:
+      label: "発生している現象"
+      description: "何が起こるか。可能ならエラーメッセージも"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: "再現手順"
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "期待する動作"
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: "発生環境"
+      description: "ブラウザ、OS、ブランチ、バージョンなど（分かる範囲で）"
+  - type: textarea
+    id: evidence
+    attributes:
+      label: "ログ・画像・補足"
+      description: "個人情報やトークンは含めないこと"
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: "修正完了条件"
+      value: |
+        - [ ] 再現手順で不具合が再発しない
+        - [ ] 関連する回帰テスト・検証を実施した

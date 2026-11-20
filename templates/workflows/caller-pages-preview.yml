@@ -1,0 +1,40 @@
+name: Deploy Pages (main + develop)
+
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pages:
+    if: >-
+      ${{
+        github.event_name != 'workflow_run' ||
+        (github.event.workflow_run.conclusion == 'success' &&
+         github.event.workflow_run.event == 'push' &&
+         github.event.workflow_run.head_branch == 'develop' &&
+         github.event.workflow_run.head_repository.full_name == github.repository)
+      }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: naoiw/.github/.github/workflows/reusable-vite-pages.yml@main
+    with:
+      package-manager: npm
+      node-version: "26"
+      publish-preview: true
+      preview-branch: develop
+      preview-subpath: develop
+
+# Example only. Ensure CI is the actual name of the develop-validation workflow.
+# The caller must exist in the repository default branch for workflow_run.
+# Pages is a single site: both build outputs are uploaded as one artifact.
+# Use an immutable commit SHA or managed release tag instead of @main in production.

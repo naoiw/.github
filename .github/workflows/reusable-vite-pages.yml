@@ -1,0 +1,174 @@
+name: Reusable Vite GitHub Pages
+
+on:
+  workflow_call:
+    inputs:
+      package-manager:
+        description: "npm or pnpm"
+        type: string
+        default: npm
+      node-version:
+        type: string
+        default: "26"
+      pnpm-version:
+        type: string
+        default: "10"
+      build-script:
+        description: "Vite build script (must accept --base)"
+        type: string
+        default: build
+      dist-dir:
+        description: "Vite output directory, relative to repository root"
+        type: string
+        default: dist
+      publish-preview:
+        description: "Build main and develop into one Pages artifact"
+        type: boolean
+        default: false
+      preview-branch:
+        description: "Existing long-lived preview branch"
+        type: string
+        default: develop
+      preview-subpath:
+        description: "Preview path below the production project path"
+        type: string
+        default: develop
+      base-path:
+        description: "Optional production base, e.g. /repo/; default /<repository-name>/"
+        type: string
+        default: ""
+
+concurrency:
+  group: shared-pages-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: >-
+      ${{
+        github.event_name != 'workflow_run' ||
+        (github.event.workflow_run.conclusion == 'success' &&
+         github.event.workflow_run.event == 'push' &&
+         github.event.workflow_run.head_branch == inputs.preview-branch &&
+         github.event.workflow_run.head_repository.full_name == github.repository)
+      }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Validate inputs
+        shell: bash
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+          DIST_DIR: ${{ inputs.dist-dir }}
+          PREVIEW_SUBPATH: ${{ inputs.preview-subpath }}
+        run: |
+          case "$PACKAGE_MANAGER" in npm|pnpm) ;; *) echo "Unsupported package manager"; exit 1 ;; esac
+          [[ "$DIST_DIR" != /* && "$DIST_DIR" != *".."* ]] || { echo "Invalid dist-dir"; exit 1; }
+          [[ "$PREVIEW_SUBPATH" =~ ^[a-zA-Z0-9_-]+$ ]] || { echo "Invalid preview-subpath"; exit 1; }
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: stable
+          persist-credentials: false
+      - name: Checkout preview
+        if: inputs.publish-preview
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || inputs.preview-branch }}
+          path: preview
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        if: inputs.package-manager == 'pnpm'
+        with:
+          version: ${{ inputs.pnpm-version }}
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+      - name: Install main dependencies
+        working-directory: stable
+        shell: bash
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+        run: |
+          if [ "$PACKAGE_MANAGER" = "pnpm" ]; then
+            pnpm install --frozen-lockfile
+          else
+            npm ci --no-audit --no-fund
+          fi
+      - name: Build main
+        working-directory: stable
+        shell: bash
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+          BUILD_SCRIPT: ${{ inputs.build-script }}
+          BASE_PATH: ${{ inputs.base-path }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          base="${BASE_PATH:-/$REPO_NAME/}"
+          "$PACKAGE_MANAGER" run "$BUILD_SCRIPT" -- --base="$base"
+      - name: Install preview dependencies
+        if: inputs.publish-preview
+        working-directory: preview
+        shell: bash
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+        run: |
+          if [ "$PACKAGE_MANAGER" = "pnpm" ]; then
+            pnpm install --frozen-lockfile
+          else
+            npm ci --no-audit --no-fund
+          fi
+      - name: Build preview
+        if: inputs.publish-preview
+        working-directory: preview
+        shell: bash
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+          BUILD_SCRIPT: ${{ inputs.build-script }}
+          BASE_PATH: ${{ inputs.base-path }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          PREVIEW_SUBPATH: ${{ inputs.preview-subpath }}
+        run: |
+          base="${BASE_PATH:-/$REPO_NAME/}"
+          [[ "$base" == */ ]] || base="$base/"
+          "$PACKAGE_MANAGER" run "$BUILD_SCRIPT" -- --base="${base}${PREVIEW_SUBPATH}/"
+      - name: Assemble single Pages artifact
+        shell: bash
+        env:
+          DIST_DIR: ${{ inputs.dist-dir }}
+          PUBLISH_PREVIEW: ${{ inputs.publish-preview }}
+          PREVIEW_SUBPATH: ${{ inputs.preview-subpath }}
+        run: |
+          set -euo pipefail
+          mkdir -p site
+          test -s "stable/$DIST_DIR/index.html"
+          cp -a "stable/$DIST_DIR/." site/
+          if [ "$PUBLISH_PREVIEW" = "true" ]; then
+            test -s "preview/$DIST_DIR/index.html"
+            mkdir -p "site/$PREVIEW_SUBPATH"
+            cp -a "preview/$DIST_DIR/." "site/$PREVIEW_SUBPATH/"
+            test -s "site/$PREVIEW_SUBPATH/index.html"
+          fi
+          touch site/.nojekyll
+          test -s site/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy production and optional preview
+        id: deployment
+        uses: actions/deploy-pages@v4

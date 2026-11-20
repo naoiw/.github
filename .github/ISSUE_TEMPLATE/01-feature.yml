@@ -1,0 +1,35 @@
+name: "機能追加"
+description: "新しい機能・画面・操作を提案する"
+title: "[Feature] "
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: "目的・背景"
+      description: "誰のどんな問題を解決するか。実装方法ではなく目的を優先する"
+      placeholder: "現在〜のため、〜できるようにしたい"
+    validations:
+      required: true
+  - type: textarea
+    id: requirements
+    attributes:
+      label: "要件・期待する動作"
+      description: "画面・操作・データ・例外処理など"
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: "完了条件"
+      description: "第三者やAIが客観的に確認できる条件を書く"
+      value: |
+        - [ ] 要件の動作を確認できる
+        - [ ] 既存機能に意図しない影響がない
+        - [ ] 必要なテスト・文書を更新している
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: "補足・参考"
+      description: "画像、URL、設計上の制約など（任意）"
