@@ -70,7 +70,7 @@ export async function exportTemplate(options) {
   }
   await replaceTextFiles(dest, values);
   console.log("Created " + dest);
-  console.log("Next: cd into output, npm install, run checks, and commit package-lock.json.");
+  console.log("Next: cd into output, pnpm install, run checks, and commit pnpm-lock.yaml.");
   return dest;
 }
 

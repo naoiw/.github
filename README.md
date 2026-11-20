@@ -24,7 +24,7 @@
 - [naoiwリポジトリ横断監査](standards/REPOSITORY_AUDIT.md)
 - [AI指示の同期・更新PRの仕組み](standards/AI_RULE_SYNC.md)
 - [AI導入用の各ツール向け雛形](templates/README.md)
-- [React + TypeScript + Viteの新規プロジェクト雛形](templates/web-react)
+- [React + TypeScript + Viteの新規プロジェクト雛形（pnpm標準）](templates/web-react)
 - [React雛形の独立と生成方法](standards/WEB_TEMPLATE.md)
 - [README・docsの標準](standards/DOCUMENTATION.md)
 - [依存・セキュリティ更新](standards/SECURITY_AUTOMATION.md)
@@ -37,7 +37,7 @@
 ## 運用上の注意
 
 - 共通 `LICENSE` の自動適用はありません。MIT等は各リポジトリに個別配置します。既存のApache 2.0等も維持します。
-- Node.js・パッケージマネージャー・CSS・デプロイは既存実装を優先します。Webアプリの新規作成には `templates/web-react/` を利用し、必要に応じて独立したTemplate Repositoryへ移します。
+- 既存アプリのパッケージマネージャーを無断で変更しません。新規React/Viteアプリはpnpm 9.14.2を標準とし、`templates/web-react/` または [独立したTemplate Repository](https://github.com/naoiw/react-vite-template) から開始します。
 - AI指示の同期は初期設定だけでは動きません。各リポジトリで同期ワークフローを呼び出し、ActionsからのPR作成を許可すると差分をPRでレビューできます。動作実績は [同期手順](standards/AI_RULE_SYNC.md) を参照してください。
 - `reusable-node-ci.yml`、`reusable-vite-pages.yml`、`reusable-sync-ai-rules.yml` は `workflow_call` 用です。呼び出し元を用意しない限り実行・公開されません。
 - リリース作成・横断監査は手動起動で、監査は読み取り専用です。現状の推奨ワークフローSHAは `versions/workflows.json` で確認できます。
