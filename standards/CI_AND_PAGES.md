@@ -2,6 +2,8 @@
 
 `naoiw/.github` の再利用可能ワークフローは**置くだけでは各リポジトリで実行されません**。呼び出し側リポジトリに `.github/workflows/` のYAMLを導入してください。
 
+新規React/TypeScript/Viteリポジトリをテンプレートから作成するときは、[新規アプリの初期設定・Pages公開ガイド](NEW_WEB_APP_SETUP.md) を先に参照してください。mainの保護、GitHub Pages設定、手動/自動公開、developプレビューへの移行をひと続きで説明しています。
+
 ## Node.js CI
 `reusable-node-ci.yml` はnpm/pnpmのlockfileインストールと、任意のLint・型チェック・テスト・ビルドを実行します。
 - [呼び出し例](../templates/workflows/caller-ci.yml)
