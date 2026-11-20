@@ -20,7 +20,11 @@
 - [UI・CSSガイド](standards/UI_STYLE.md)
 - [標準ディレクトリ構成](standards/REPOSITORY_STRUCTURE.md)
 - [再利用可能CI・GitHub Pagesの使い方](standards/CI_AND_PAGES.md)
+- [AI指示の同期・更新PRの仕組み](standards/AI_RULE_SYNC.md)
 - [AI導入用の各ツール向け雛形](templates/README.md)
+- [React + TypeScript + Viteの新規プロジェクト雛形](templates/web-react)
+- [README・docsの標準](standards/DOCUMENTATION.md)
+- [MIT等のライセンス運用](standards/LICENSING.md)
 - [ワークフロー呼び出し例](templates/workflows)
 
 `standards/`、`templates/`、`AGENTS.md` は他リポジトリへ自動コピーされません。AIが自動で本リポジトリを読む保証もありません。各リポジトリに必要な参照ファイルを配置するか、明示的にこの規約を読ませてください。
@@ -28,6 +32,7 @@
 ## 運用上の注意
 
 - 共通 `LICENSE` の自動適用はありません。MIT等は各リポジトリに個別配置します。既存のApache 2.0等も維持します。
-- Node.js・パッケージマネージャー・CSS・デプロイは既存実装を優先し、将来の新規リポジトリ作成テンプレートで標準化します。
+- Node.js・パッケージマネージャー・CSS・デプロイは既存実装を優先します。Webアプリの新規作成には `templates/web-react/` を利用し、必要に応じて独立したTemplate Repositoryへ移します。
+- AI指示の同期は初期設定だけでは動きません。各リポジトリで同期ワークフローの呼び出し設定を追加すると、差分をPRでレビューできます。
 - `reusable-node-ci.yml` と `reusable-vite-pages.yml` は `workflow_call` 用です。呼び出し元を用意しない限り実行・公開されません。
 - 既存のリポジトリ、Issue、ブランチ、公開サイトはこのリポジトリから勝手に変更しません。

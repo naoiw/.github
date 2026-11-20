@@ -23,3 +23,6 @@ node /path/to/.github/scripts/sync-agent-rules.mjs \
 - `@main` は更新をそのまま取り込むため、本番運用にはバージョンタグ/コミットSHA固定を推奨します。
 - 呼び出し元に必要な `contents: write` と `pull-requests: write` の最小権限を与えます。
 - Cursor/Copilot/ChatGPTの読み込み仕様はツールごとに異なります。AGENTS.mdへの設置だけであらゆるChatGPT会話へ自動適用される保証はありません。
+
+## 検証
+`node --test scripts/test-sync-agent-rules.mjs` で新規ファイル作成、管理領域更新、既存プロジェクト固有指示の維持、管理外ファイルの保護、checkモード、再実行時の冪等性を検証します。

@@ -22,10 +22,19 @@ Dir[".github/workflows/*.yml"].each do |file|
   YAML.parse_file(file) || abort("#{file}: empty YAML")
 end
 
-["reusable-node-ci.yml", "reusable-vite-pages.yml"].each do |name|
+["reusable-node-ci.yml", "reusable-vite-pages.yml", "reusable-sync-ai-rules.yml"].each do |name|
   file = File.join(".github/workflows", name)
   abort "#{file}: missing workflow_call" unless File.read(file).match?(/^  workflow_call:/)
 end
+
+Dir["templates/web-react/.github/workflows/*.yml", "templates/workflows/*.yml"].each do |file|
+  YAML.parse_file(file) || abort("#{file}: empty YAML")
+end
+
+require "json"
+package = JSON.parse(File.read("templates/web-react/package.json"))
+abort "Missing React starter build script" unless package.fetch("scripts", {}).key?("build")
+abort "Missing TypeScript in React starter" unless package.fetch("devDependencies", {}).key?("typescript")
 
 required = %w[
   README.md
@@ -41,7 +50,20 @@ required = %w[
   templates/AGENTS.md
   templates/.cursor/rules/naoiw-default.mdc
   templates/.github/copilot-instructions.md
+  standards/AI_RULE_SYNC.md
+  standards/LICENSING.md
+  standards/DOCUMENTATION.md
+  scripts/sync-agent-rules.mjs
+  scripts/test-sync-agent-rules.mjs
+  templates/agent-bundle/AGENTS.md
+  templates/agent-bundle/.cursor/rules/naoiw-default.mdc
+  templates/agent-bundle/.github/copilot-instructions.md
+  templates/web-react/src/App.tsx
+  templates/web-react/src/styles.css
+  templates/web-react/LICENSE
+  templates/web-react/README.md
+  templates/web-react/docs/DEVELOPMENT.md
 ]
 required.each { |file| abort "Missing #{file}" unless File.file?(file) }
 
-puts "Issue Forms, workflow YAML, shared standards and templates: OK"
+puts "Issue Forms, reusable workflow YAML, AI sync and React starter structure: OK"
