@@ -27,6 +27,7 @@
 - [React + TypeScript + Viteの新規プロジェクト雛形（pnpm標準）](templates/web-react)
 - [独立したGitHub Template Repository](https://github.com/naoiw/react-vite-template)
 - [React雛形の独立と生成方法](standards/WEB_TEMPLATE.md)
+- [新規TypeScript/Viteアプリの作成からPages公開まで](standards/NEW_WEB_APP_SETUP.md) — main保護・手動/自動デプロイ・developプレビュー
 - [README・docsの標準](standards/DOCUMENTATION.md)
 - [依存・セキュリティ更新](standards/SECURITY_AUTOMATION.md)
 - [ブランチ保護・Rulesets推奨設定](standards/BRANCH_PROTECTION.md)
