@@ -30,3 +30,7 @@
 - 非公開リポジトリ監査には別途 `AUDIT_READ_TOKEN` を使い、Contents readの最小権限に絞ります。
 - 他リポジトリへの書き込み用のPATを、この共通リポジトリに不用意に登録しません。
 - GitHub Actionsの権限は各workflow/jobで最小化し、第三者からのPRで書込トークンを扱わないことを優先します。
+
+## 初回Dependabot検証（2026-11-21）
+
+[依存更新PR #6](https://github.com/naoiw/.github/pull/6) では TypeScript 7.0.2 と `typescript-eslint` の対応範囲（TypeScript `<6.1`）の不一致でCIが失敗しました。**互換性が確認できるまでPR #6をマージしない**でください。Dependabot更新PRは必ずCIで確認し、必要であればグループ分割や依存バージョンの固定で解消します。

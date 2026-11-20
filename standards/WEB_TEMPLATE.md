@@ -2,7 +2,7 @@
 
 ## 現状
 
-`templates/web-react/` にReact/TypeScript/Viteの初期コードとCI・Pages呼び出し例があります。独立した `naoiw/react-vite-template` リポジトリは**まだ作成されていません**。
+`templates/web-react/` にReact/TypeScript/Viteの初期コードとCI・Pages呼び出し例があります。独立した [naoiw/react-vite-template](https://github.com/naoiw/react-vite-template) は作成済みで、GitHubのTemplate repository設定も有効です。初期コードは [PR #1](https://github.com/naoiw/react-vite-template/pull/1) で導入中です。mainへのマージ後にUse this templateから作成できます。
 
 `scripts/export-web-template.mjs` を使うと、管理領域付きのAGENTS/Cursor/Copilotの3ファイルを含め、単独で利用できるディレクトリを生成できます。既存の出力先は上書きしません。
 
@@ -36,3 +36,7 @@ GitHub Pagesの設定が未完了のまま自動デプロイすると、Actions�
 - 共通ワークフローやAI指示の原本は引き続き `naoiw/.github` に維持します。
 - React雛形のソースを `.github` と独立リポジトリの**両方で編集しない**よう、独立後に原本をどちらにするか決めてREADMEを更新します。
 - 一旦は `.github` 内の雛形を正とし、独立先は複製とします。後で移行PRを作成して二重管理を解消します。
+
+## 独立先の同期・管理
+
+`naoiw/.github/templates/web-react/` を開発上の原本とし、独立リポジトリはその配布用コピーとして扱います。共通CI/Pagesを変更した場合は、双方の差分を確認して別々のPRで更新してください。コード・ライセンス・lockfileの二重管理に注意し、今後の改修では原本の統一を検討してください。
