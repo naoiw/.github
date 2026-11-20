@@ -1,0 +1,43 @@
+name: Audit naoiw repositories
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "public or accessible (accessible requires AUDIT_READ_TOKEN)"
+        required: true
+        default: public
+        type: choice
+        options:
+          - public
+          - accessible
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "26"
+      - name: Read-only cross-repository audit
+        env:
+          AUDIT_OWNER: naoiw
+          AUDIT_MODE: \${{ inputs.mode }}
+          AUDIT_TOKEN: \${{ secrets.AUDIT_READ_TOKEN }}
+          GITHUB_TOKEN: \${{ github.token }}
+          AUDIT_OUTPUT: audit-output
+        run: node scripts/audit-repositories.mjs
+      - name: Upload report even if an API error occurred
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: repository-audit
+          path: |
+            audit-output/report.md
+            audit-output/report.json
+          if-no-files-found: warn
+          retention-days: 30
