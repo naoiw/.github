@@ -33,4 +33,6 @@
 
 ## 初回Dependabot検証（2026-11-21）
 
-[依存更新PR #6](https://github.com/naoiw/.github/pull/6) では TypeScript 7.0.2 と `typescript-eslint` の対応範囲（TypeScript `<6.1`）の不一致でCIが失敗しました。**互換性が確認できるまでPR #6をマージしない**でください。Dependabot更新PRは必ずCIで確認し、必要であればグループ分割や依存バージョンの固定で解消します。
+[依存更新PR #6](https://github.com/naoiw/.github/pull/6) は当初、TypeScript 7.0.2 が `typescript-eslint` の対応範囲（TypeScript `<6.1`）を超え、CIが失敗しました。その後、**TypeScriptを5.9系に維持**し、ESLint 10・Vite 8等の更新とともに `pnpm-lock.yaml` を再生成。[修正後CI](https://github.com/naoiw/.github/actions/runs/44766878482) 成功を確認し、2026-11-21にmainへマージしました。
+
+[GitHub Actions更新PR #5](https://github.com/naoiw/.github/pull/5) も、共通CIとPages dry-runを検証したうえでmainへマージ済みです。既存リポジトリは共有ワークフローをSHA固定しているため、今回の更新を自動では取り込みません。
