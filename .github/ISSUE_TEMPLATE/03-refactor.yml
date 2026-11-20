@@ -1,0 +1,32 @@
+name: "リファクタリング・改善"
+description: "振る舞いを原則維持した構造改善や保守"
+title: "[Refactor] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: "現状と課題"
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: "変更する範囲"
+      description: "対象モジュール、不要になる重複、依存関係など"
+    validations:
+      required: true
+  - type: textarea
+    id: invariants
+    attributes:
+      label: "変更してはいけない動作・互換性"
+      description: "API、UI、出力形式、保存データ、デプロイ先など"
+    validations:
+      required: true
+  - type: textarea
+    id: checks
+    attributes:
+      label: "完了条件・検証方法"
+      value: |
+        - [ ] 既存の公開仕様が維持される
+        - [ ] 必要なテストが成功する
+        - [ ] 対象外の変更を含めない

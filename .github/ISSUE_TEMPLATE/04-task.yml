@@ -1,0 +1,28 @@
+name: "開発・保守タスク"
+description: "依存更新、CI、文書、調査などの作業"
+title: "[Task] "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: "目的"
+    validations:
+      required: true
+  - type: textarea
+    id: actions
+    attributes:
+      label: "作業内容"
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: "対象外・制約"
+      description: "コード変更禁止、Issueのみ、PRは作るがマージしない等があれば明示"
+  - type: textarea
+    id: done
+    attributes:
+      label: "完了条件"
+      value: |
+        - [ ] 指定作業が完了している
+        - [ ] 変更と検証結果が記録されている
