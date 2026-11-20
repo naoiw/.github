@@ -25,6 +25,7 @@
 - [AI指示の同期・更新PRの仕組み](standards/AI_RULE_SYNC.md)
 - [AI導入用の各ツール向け雛形](templates/README.md)
 - [React + TypeScript + Viteの新規プロジェクト雛形](templates/web-react)
+- [React雛形の独立と生成方法](standards/WEB_TEMPLATE.md)
 - [README・docsの標準](standards/DOCUMENTATION.md)
 - [MIT等のライセンス運用](standards/LICENSING.md)
 - [ワークフロー呼び出し例](templates/workflows)

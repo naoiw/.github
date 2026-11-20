@@ -25,6 +25,8 @@ jobs:
       - name: Validate workflow recommendation manifest
         run: |
           node --input-type=module -e "import fs from 'node:fs'; const m=JSON.parse(fs.readFileSync('versions/workflows.json')); if(!/^[a-f0-9]{40}$/.test(m.recommended_commit)) process.exit(1)"
+      - name: Test standalone template exporter
+        run: node --test scripts/test-export-web-template.mjs
       - name: Build and lint React/Vite starter
         working-directory: templates/web-react
         run: |
