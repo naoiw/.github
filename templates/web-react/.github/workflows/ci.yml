@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   shared-check:
-    uses: naoiw/.github/.github/workflows/reusable-node-ci.yml@main
+    uses: naoiw/.github/.github/workflows/reusable-node-ci.yml@495524d0ef4b8418566782a569de6c34a9d63ce2
     with:
       package-manager: npm
       node-version: "26"

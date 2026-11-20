@@ -33,7 +33,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Check package manager
         shell: bash
         env:
@@ -45,7 +45,7 @@ jobs:
         with:
           version: ${{ inputs.pnpm-version }}
           run_install: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node-version }}
       - name: Install locked dependencies

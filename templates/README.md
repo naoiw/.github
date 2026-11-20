@@ -1,11 +1,15 @@
-# AI指示ファイルの導入テンプレート
+# AI指示ファイルの導入
 
-以下は**コピーまたは内容を取り込んで**各リポジトリに設置するための雛形です。ここにあるだけではGitHubもChatGPTもCursorも他リポジトリで自動的には読み込みません。
+**新規導入・共通ルール同期の唯一の原本は [agent-bundle](agent-bundle/) です。**
 
-- `AGENTS.md` → 各リポジトリのルートへ
-- `.cursor/rules/naoiw-default.mdc` → 各リポジトリの同じパスへ
-- `.github/copilot-instructions.md` → 各リポジトリの同じパスへ
+| 対象リポジトリの配置先 | 雛形 |
+| --- | --- |
+| `AGENTS.md` | [agent-bundle/AGENTS.md](agent-bundle/AGENTS.md) |
+| `.cursor/rules/naoiw-default.mdc` | [agent-bundle/.cursor/rules/naoiw-default.mdc](agent-bundle/.cursor/rules/naoiw-default.mdc) |
+| `.github/copilot-instructions.md` | [agent-bundle/.github/copilot-instructions.md](agent-bundle/.github/copilot-instructions.md) |
 
-いずれも `https://github.com/naoiw/.github/blob/main/standards/AI_DEVELOPMENT.md` を規約として参照する構成です。接続・ブラウズ能力のないエージェントではリンクだけでは内容を読めないため、必要に応じてルール本文の抜粋を各リポジトリに配置してください。
+古い参照用テンプレートと同期用雛形が並存していたため、旧3ファイルを廃止し、以後はagent-bundleだけを使用します。
 
-導入は**一度に全リポジトリへ強制しない**。既存ファイルを確認してから追加し、プロジェクト固有の指示を消さないこと。
+管理領域のマーカー `<!-- naoiw:managed:start -->` と `<!-- naoiw:managed:end -->` の間だけを更新します。その外側のプロジェクト固有の指示は保持し、マーカーのない既存ファイルは上書きせずスキップします。
+
+詳細は [同期の手順](../standards/AI_RULE_SYNC.md)。ツールごとの指示ファイルの読み込み仕様は異なり、自動で他リポジトリの規約を取得する保証はありません。

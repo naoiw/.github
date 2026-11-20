@@ -32,4 +32,4 @@
 [技術スタック](TECH_STACK.md)、[UI・CSSガイド](UI_STYLE.md)、[構成方針](REPOSITORY_STRUCTURE.md) に従う。ただし既存リポジトリの選定が優先。
 
 ## AIツールへ渡す方法
-本ファイルは他リポジトリへ**自動継承されません**。各リポジトリの `AGENTS.md`、`.cursor/rules/*.mdc`、`.github/copilot-instructions.md` などへ明示的に参照を配置してください（[導入用ファイル](../templates/README.md)）。
+本ファイルは他リポジトリへ**自動継承されません**。各リポジトリの `AGENTS.md`、`.cursor/rules/*.mdc`、`.github/copilot-instructions.md` などへ明示的に参照を配置してください（[導入用ファイル](../templates/README.md)、[同期手順](AI_RULE_SYNC.md)）。

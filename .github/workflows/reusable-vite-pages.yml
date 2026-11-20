@@ -71,14 +71,14 @@ jobs:
           [[ "$DIST_DIR" != /* && "$DIST_DIR" != *".."* ]] || { echo "Invalid dist-dir"; exit 1; }
           [[ "$PREVIEW_SUBPATH" =~ ^[a-zA-Z0-9_-]+$ ]] || { echo "Invalid preview-subpath"; exit 1; }
       - name: Checkout main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
           path: stable
           persist-credentials: false
       - name: Checkout preview
         if: inputs.publish-preview
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || inputs.preview-branch }}
           path: preview
@@ -88,7 +88,7 @@ jobs:
         with:
           version: ${{ inputs.pnpm-version }}
           run_install: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node-version }}
       - name: Install main dependencies

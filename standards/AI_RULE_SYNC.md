@@ -26,3 +26,20 @@ node /path/to/.github/scripts/sync-agent-rules.mjs \
 
 ## 検証
 `node --test scripts/test-sync-agent-rules.mjs` で新規ファイル作成、管理領域更新、既存プロジェクト固有指示の維持、管理外ファイルの保護、checkモード、再実行時の冪等性を検証します。
+
+## 実地検証（2026-11-20）
+
+`geo-quiz` の専用試験ブランチで再利用ワークフローを起動しました。
+
+- [初回実行](https://github.com/naoiw/geo-quiz/actions/runs/44746852704)：原本取得、管理領域の更新、同期ブランチpushは成功。リポジトリでActionsからのPR作成が無効だったため、PR作成だけ失敗。
+- **「Allow GitHub Actions to create and approve pull requests」を有効にした後**、[再実行](https://github.com/naoiw/geo-quiz/actions/runs/44747956890)が成功し、[検証PR #60](https://github.com/naoiw/geo-quiz/pull/60) を自動作成できました。検証用PRは誤マージ防止のためクローズ済みです。
+
+検証後は一時的なpushトリガーと古いテスト用ルールを試験ブランチで復旧しました。本番mainは変更していません。試験で生成された同期用ブランチは残る場合があります。
+
+### PR作成がブロックされた場合
+
+対象リポジトリの `Settings > Actions > General > Workflow permissions` で `Allow GitHub Actions to create and approve pull requests` を有効にします。権限を有効化できない場合でも `chore/sync-naoiw-ai-rules` ブランチが生成されることがあり、そのブランチから手動でPRを作成できます。失敗時にはActionsのジョブサマリーに手動PR用リンクを表示します。
+
+デフォルトの `GITHUB_TOKEN` で作成したPRは、他のActionsの `pull_request` イベントを自動起動しない場合があります。作成されたPRのレビューと検証チェックを別途確認してください。
+
+`workflow_dispatch` は対象リポジトリのデフォルトブランチに呼び出し側workflowが存在するときに使えます。既定では手動同期のみで、全リポジトリへの一括反映はしません。

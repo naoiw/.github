@@ -37,3 +37,23 @@
 
 ## 状態
 本リポジトリのワークフローは共通部品の提供であり、既存アプリへの配布・移行やPagesの公開は行いません。導入時は対象リポジトリごとにPRと動作確認を行います。
+
+## 安定運用と依存バージョンの固定
+
+新規の呼び出し元では、`naoiw/.github` の再利用可能workflowを **`@main` ではなくコミットSHAで固定**します。`templates/workflows/` と `templates/web-react/` の例は、2026-11-20にCIとPages dry-runを検証した共通workflowのSHAへ固定済みです。原本をマージ更新しても、すでに配置した呼び出し元の参照先は**自動では更新されません**。変更時にリポジトリごとのCI・デプロイを再検証し、参照SHAを更新してください。
+
+- 既存のCI名を参照する `workflow_run` は、検証workflowの名前が変わると発火しなくなります。呼び出し元では既存の名前やイベント制御を確認すること。
+- 本番Pages公開の実行は `dry-run` とは別に検証します。本番公開へ無断移行しないこと。
+- 共通CIは `contents: read` のみで動作し、Pagesのbuildジョブもread-onlyです。deployジョブだけ `pages: write` と `id-token: write` を必要とします。呼び出し側では再利用workflowの権限要求を満たす必要があります。
+- 同期workflowはPR作成のため `contents: write` と `pull-requests: write` が必要ですが、リポジトリ設定によるPR作成可否の制限も別途存在します。
+- `ubuntu-latest` で新しいGitHub-hosted runnerを使用します。self-hosted runnerに置き換える際はNode 24で動作するGitHub Actionsが要求するRunnerの最小バージョンを満たすこと。
+
+### 更新後の実地検証（2026-11-20）
+
+共通ワークフローの `actions/checkout@v6` / `actions/setup-node@v6` への更新を、`geo-quiz` の一時的な試験ブランチから、マージ前の共通ワークフロー参照で検証しました。
+
+- [共通Node CI](https://github.com/naoiw/geo-quiz/actions/runs/44749655417)：npm install、Lint、型チェック、テスト、ビルドがすべて成功。
+- [共通Pages dry-run](https://github.com/naoiw/geo-quiz/actions/runs/44749655367)：mainのビルドとArtifact作成に成功。公開ジョブはスキップ。
+- 使った一時的なworkflowは試験ブランチから削除しました。本番公開処理は変更していません。
+
+pnpmおよびmain+developのPages dry-runは旧アクション版で成功済みですが、**今回のv6更新後のその組み合わせは未検証**です。対象リポジトリへの実移行時に再検証してください。
