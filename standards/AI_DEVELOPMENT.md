@@ -29,6 +29,8 @@
 [開発フロー](GITHUB_FLOW.md) に従う。原則、短命ブランチ→PR→検証→明示的に承認されたマージ。不要なdevelopを追加しない。
 
 ## 技術スタック / CSS
+新規React/TypeScriptアプリはpnpmを標準とし、現行のWebスターターはpnpm 9.14.2と`pnpm-lock.yaml`を使う。**既存アプリの依存管理方式は勝手に変更しない。**
+
 [技術スタック](TECH_STACK.md)、[UI・CSSガイド](UI_STYLE.md)、[構成方針](REPOSITORY_STRUCTURE.md) に従う。ただし既存リポジトリの選定が優先。
 
 ## AIツールへ渡す方法

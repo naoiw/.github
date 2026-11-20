@@ -43,6 +43,9 @@ require "json"
 package = JSON.parse(File.read("templates/web-react/package.json"))
 abort "Missing React starter build script" unless package.fetch("scripts", {}).key?("build")
 abort "Missing TypeScript in React starter" unless package.fetch("devDependencies", {}).key?("typescript")
+abort "React starter must use pnpm@9.14.2" unless package["packageManager"] == "pnpm@9.14.2"
+abort "Missing React starter pnpm-lock.yaml" unless File.file?("templates/web-react/pnpm-lock.yaml")
+abort "Remove npm package-lock.json from React starter" if File.exist?("templates/web-react/package-lock.json")
 
 required = %w[
   README.md

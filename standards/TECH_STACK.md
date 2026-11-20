@@ -6,7 +6,7 @@
 - 言語: TypeScript（strict）／React（関数コンポーネント）
 - ビルド: Vite（単純な静的サイト向け）。SSR・認証・サーバーAPIが必要な場合は案件に合わせて判断。
 - ランタイム: プロジェクトに必要なサポート中のNode.js LTS。初期値の例は Node.js 26。 `.nvmrc` と `package.json#engines` を整合させる。
-- 依存管理: 新規の小規模アプリはnpmを既定候補とする。既存のnpm/pnpm/yarnは維持し、lockfileは1種類にする。
+- 依存管理: **新規React/TypeScriptアプリはpnpmを標準**とし、現在のReact/Vite雛形ではpnpm 9.14.2を固定する（`packageManager` と `pnpm-lock.yaml` をコミット）。既存のnpm/pnpm/yarnは維持し、lockfileは1種類にする。
 - 品質検証: ESLint、TypeScript型チェック、既存のテスト基盤、Viteビルド。新規アプリでは必要なものから導入。
 - コマンド名: `dev`, `build`, `preview`, `lint`, `typecheck`, `test` を可能な範囲で統一。
 - GitHub Pagesを使うときはリポジトリ名を含むbase pathを正しく設定し、mainのみかmain+developかを選択する。
