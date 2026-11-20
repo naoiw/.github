@@ -33,6 +33,6 @@
 
 - 共通 `LICENSE` の自動適用はありません。MIT等は各リポジトリに個別配置します。既存のApache 2.0等も維持します。
 - Node.js・パッケージマネージャー・CSS・デプロイは既存実装を優先します。Webアプリの新規作成には `templates/web-react/` を利用し、必要に応じて独立したTemplate Repositoryへ移します。
-- AI指示の同期は初期設定だけでは動きません。各リポジトリで同期ワークフローの呼び出し設定を追加すると、差分をPRでレビューできます。
-- `reusable-node-ci.yml` と `reusable-vite-pages.yml` は `workflow_call` 用です。呼び出し元を用意しない限り実行・公開されません。
+- AI指示の同期は初期設定だけでは動きません。各リポジトリで同期ワークフローを呼び出し、ActionsからのPR作成を許可すると差分をPRでレビューできます。動作実績は [同期手順](standards/AI_RULE_SYNC.md) を参照してください。
+- `reusable-node-ci.yml`、`reusable-vite-pages.yml`、`reusable-sync-ai-rules.yml` は `workflow_call` 用です。呼び出し元を用意しない限り実行・公開されません。
 - 既存のリポジトリ、Issue、ブランチ、公開サイトはこのリポジトリから勝手に変更しません。

@@ -47,9 +47,6 @@ required = %w[
   standards/UI_STYLE.md
   standards/REPOSITORY_STRUCTURE.md
   standards/CI_AND_PAGES.md
-  templates/AGENTS.md
-  templates/.cursor/rules/naoiw-default.mdc
-  templates/.github/copilot-instructions.md
   standards/AI_RULE_SYNC.md
   standards/LICENSING.md
   standards/DOCUMENTATION.md
