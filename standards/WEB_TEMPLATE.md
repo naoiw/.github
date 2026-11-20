@@ -6,6 +6,8 @@
 
 `scripts/export-web-template.mjs` を使うと、管理領域付きのAGENTS/Cursor/Copilotの3ファイルを含め、単独で利用できるディレクトリを生成できます。既存の出力先は上書きしません。
 
+新しいPages公開アプリを作る際のGitHub側の初期設定（Rulesets / Pages）、手動・自動デプロイの切替、developプレビューの具体的な手順は [NEW_WEB_APP_SETUP.md](NEW_WEB_APP_SETUP.md) を参照してください。テンプレートから複製してもGitHubのリポジトリ設定は継承されません。
+
 ## 使い方
 
 このリポジトリをクローンしてNode 26で次を実行します。
