@@ -27,9 +27,9 @@ test("exports standalone starter and managed instructions without placeholders",
     const copilot = await readFile(join(output, ".github/copilot-instructions.md"), "utf8");
     assert.match(copilot, /naoiw:managed:start/);
     const dependabot = await readFile(join(output, ".github/dependabot.yml"), "utf8");
-    assert.match(dependabot, /package-ecosystem:\\s*"npm"/);
-    assert.match(dependabot, /package-ecosystem:\\s*"github-actions"/);
-    assert.match(dependabot, /update-types:\\s*\\["minor", "patch"\\]/);
+    assert.match(dependabot, /package-ecosystem:\s*"npm"/);
+    assert.match(dependabot, /package-ecosystem:\s*"github-actions"/);
+    assert.match(dependabot, /update-types:\s*\["minor", "patch"\]/);
     const workflows = await readdir(join(output, ".github/workflows"));
     assert.deepEqual(workflows.sort(), ["ci.yml", "deploy-pages.yml"]);
     await assert.rejects(exportTemplate({ name: "my-site", owner: "naoiw", output }), /Refusing to overwrite/);
