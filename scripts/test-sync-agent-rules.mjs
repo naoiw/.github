@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { mkdtemp, writeFile, readFile, rm, mkdir, symlink } from "node:fs/promises";
-import { join, resolve, dirname } from "node:path";
+import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
 
@@ -87,7 +87,7 @@ test("never follow existing symlink targets", async () => {
     await symlink(join(outside, "AGENTS.md"), join(temp, "AGENTS.md"));
     const result = await run(temp);
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /Refusing to update symlink/);
+    assert.match(result.stderr, /Refusing to update symlink or non-file/);
     assert.equal(await readFile(join(outside, "AGENTS.md"), "utf8"), "outside instructions\n");
   } finally {
     await rm(temp, { recursive: true, force: true });
@@ -99,5 +99,34 @@ test("reject unknown or missing CLI arguments", () => {
   for (const args of [["--unexpected"], ["--target-root"], ["--source-root", "--check"]]) {
     const result = spawnSync(process.execPath, [script, ...args], { encoding: "utf8" });
     assert.notEqual(result.status, 0, JSON.stringify(args));
+  }
+});
+
+test("reject symlink parent directories", async () => {
+  const temp = await mkdtemp(join(tmpdir(), "naoiw-rules-parent-link-"));
+  const outside = await mkdtemp(join(tmpdir(), "naoiw-rules-parent-out-"));
+  try {
+    await mkdir(join(outside, "rules"), { recursive: true });
+    await symlink(join(outside, "rules"), join(temp, ".cursor"));
+    const result = await run(temp);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Refusing non-directory or symlink parent/);
+    const outsideFiles = await import("node:fs/promises").then(fs => fs.readdir(join(outside, "rules")));
+    assert.deepEqual(outsideFiles, []);
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+    await rm(outside, { recursive: true, force: true });
+  }
+});
+
+test("reject dangling symlink targets", async () => {
+  const temp = await mkdtemp(join(tmpdir(), "naoiw-rules-dangling-link-"));
+  try {
+    await symlink(join(temp, "missing.txt"), join(temp, "AGENTS.md"));
+    const result = await run(temp);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Refusing to update symlink or non-file/);
+  } finally {
+    await rm(temp, { recursive: true, force: true });
   }
 });

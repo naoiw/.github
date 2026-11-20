@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // Copies only managed AI instructions. Unmanaged content is never overwritten.
 import { readFile, writeFile, mkdir, lstat } from "node:fs/promises";
-import { existsSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 
 const start = "<!-- naoiw:managed:start -->";
@@ -38,14 +37,33 @@ for (const path of paths) {
   const target = join(targetRoot, path);
   const template = await readFile(source, "utf8");
   const templateManaged = managed(template, source);
-  if (!existsSync(target)) {
+  // Reject directory symlinks and malformed target types before scheduling writes.
+  let parent = targetRoot;
+  for (const segment of path.split("/").slice(0, -1)) {
+    parent = join(parent, segment);
+    try {
+      const parentStat = await lstat(parent);
+      if (!parentStat.isDirectory() || parentStat.isSymbolicLink()) {
+        throw new Error(`Refusing non-directory or symlink parent: ${parent}`);
+      }
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+    }
+  }
+  let targetStat;
+  try {
+    targetStat = await lstat(target);
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  if (!targetStat) {
     planned.push({ target, content: template });
     changed++;
     console.log(`${check ? "OUTDATED" : "CREATED"} ${path}`);
     continue;
   }
-  if ((await lstat(target)).isSymbolicLink()) {
-    throw new Error(`Refusing to update symlink: ${target}`);
+  if (targetStat.isSymbolicLink() || !targetStat.isFile()) {
+    throw new Error(`Refusing to update symlink or non-file: ${target}`);
   }
   const current = await readFile(target, "utf8");
   if (!current.includes(start) && !current.includes(end)) {
