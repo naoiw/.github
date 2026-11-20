@@ -20,6 +20,11 @@ jobs:
           node-version: "26"
       - name: Test safe AI rule synchronization
         run: node --test scripts/test-sync-agent-rules.mjs
+      - name: Test repository audit classification
+        run: node --test scripts/test-audit-repositories.mjs
+      - name: Validate workflow recommendation manifest
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; const m=JSON.parse(fs.readFileSync('versions/workflows.json')); if(!/^[a-f0-9]{40}$/.test(m.recommended_commit)) process.exit(1)"
       - name: Build and lint React/Vite starter
         working-directory: templates/web-react
         run: |

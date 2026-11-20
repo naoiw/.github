@@ -20,6 +20,8 @@
 - [UI・CSSガイド](standards/UI_STYLE.md)
 - [標準ディレクトリ構成](standards/REPOSITORY_STRUCTURE.md)
 - [再利用可能CI・GitHub Pagesの使い方](standards/CI_AND_PAGES.md)
+- [共通ワークフローのバージョン管理](standards/WORKFLOW_RELEASES.md)
+- [naoiwリポジトリ横断監査](standards/REPOSITORY_AUDIT.md)
 - [AI指示の同期・更新PRの仕組み](standards/AI_RULE_SYNC.md)
 - [AI導入用の各ツール向け雛形](templates/README.md)
 - [React + TypeScript + Viteの新規プロジェクト雛形](templates/web-react)
@@ -35,4 +37,5 @@
 - Node.js・パッケージマネージャー・CSS・デプロイは既存実装を優先します。Webアプリの新規作成には `templates/web-react/` を利用し、必要に応じて独立したTemplate Repositoryへ移します。
 - AI指示の同期は初期設定だけでは動きません。各リポジトリで同期ワークフローを呼び出し、ActionsからのPR作成を許可すると差分をPRでレビューできます。動作実績は [同期手順](standards/AI_RULE_SYNC.md) を参照してください。
 - `reusable-node-ci.yml`、`reusable-vite-pages.yml`、`reusable-sync-ai-rules.yml` は `workflow_call` 用です。呼び出し元を用意しない限り実行・公開されません。
+- リリース作成・横断監査は手動起動で、監査は読み取り専用です。現状の推奨ワークフローSHAは `versions/workflows.json` で確認できます。
 - 既存のリポジトリ、Issue、ブランチ、公開サイトはこのリポジトリから勝手に変更しません。
