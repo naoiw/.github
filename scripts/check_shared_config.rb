@@ -31,6 +31,11 @@ Dir["templates/web-react/.github/workflows/*.yml", "templates/workflows/*.yml"].
   YAML.parse_file(file) || abort("#{file}: empty YAML")
 end
 
+# New reusable-workflow caller examples must be pinned, never silently follow @main.
+Dir["templates/workflows/*.yml", "templates/web-react/.github/workflows/*.yml"].each do |file|
+  abort "#{file}: shared workflow reference must be SHA pinned" if File.read(file).match?(%r{uses:\s+naoiw/\.github/\.github/workflows/[^\s]+@main})
+end
+
 require "json"
 package = JSON.parse(File.read("templates/web-react/package.json"))
 abort "Missing React starter build script" unless package.fetch("scripts", {}).key?("build")
