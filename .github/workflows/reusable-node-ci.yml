@@ -33,19 +33,19 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Check package manager
         shell: bash
         env:
           PACKAGE_MANAGER: ${{ inputs.package-manager }}
         run: |
           case "$PACKAGE_MANAGER" in npm|pnpm) ;; *) echo "Unsupported package manager: $PACKAGE_MANAGER"; exit 1 ;; esac
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: inputs.package-manager == 'pnpm'
         with:
           version: ${{ inputs.pnpm-version }}
           run_install: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ inputs.node-version }}
       - name: Install locked dependencies
