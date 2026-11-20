@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   sync:
-    uses: naoiw/.github/.github/workflows/reusable-sync-ai-rules.yml@495524d0ef4b8418566782a569de6c34a9d63ce2
+    uses: naoiw/.github/.github/workflows/reusable-sync-ai-rules.yml@2803c2939d96544d9243244686dad8e58b7b78b6
 
 # Notes:
 # - GitHub Settings > Actions > General: Allow GitHub Actions to create and approve pull requests
