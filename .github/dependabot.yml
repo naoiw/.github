@@ -4,7 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-      day: "monday"
       time: "02:42"
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 5
@@ -17,7 +16,6 @@ updates:
     directory: "/templates/web-react"
     schedule:
       interval: "monthly"
-      day: "monday"
       time: "03:42"
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 5
