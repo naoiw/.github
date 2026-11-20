@@ -17,6 +17,9 @@ forms.each do |file|
 end
 
 YAML.load_file(".github/ISSUE_TEMPLATE/config.yml")
+dependabot = YAML.load_file(".github/dependabot.yml")
+abort "Dependabot configuration missing" unless dependabot.fetch("version", nil) == 2 &&
+  dependabot.fetch("updates", []).size >= 2
 
 Dir[".github/workflows/*.yml"].each do |file|
   YAML.parse_file(file) || abort("#{file}: empty YAML")
@@ -55,6 +58,19 @@ required = %w[
   standards/AI_RULE_SYNC.md
   standards/LICENSING.md
   standards/DOCUMENTATION.md
+  standards/WORKFLOW_RELEASES.md
+  standards/REPOSITORY_AUDIT.md
+  standards/WEB_TEMPLATE.md
+  standards/SECURITY_AUTOMATION.md
+  standards/BRANCH_PROTECTION.md
+  versions/workflows.json
+  scripts/audit-repositories.mjs
+  scripts/test-audit-repositories.mjs
+  scripts/export-web-template.mjs
+  scripts/test-export-web-template.mjs
+  .github/workflows/audit-repositories.yml
+  .github/workflows/release-shared-workflows.yml
+  .github/dependabot.yml
   scripts/sync-agent-rules.mjs
   scripts/test-sync-agent-rules.mjs
   templates/agent-bundle/AGENTS.md
