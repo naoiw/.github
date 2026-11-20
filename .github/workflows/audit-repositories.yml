@@ -26,9 +26,9 @@ jobs:
       - name: Read-only cross-repository audit
         env:
           AUDIT_OWNER: naoiw
-          AUDIT_MODE: \${{ inputs.mode }}
-          AUDIT_TOKEN: \${{ secrets.AUDIT_READ_TOKEN }}
-          GITHUB_TOKEN: \${{ github.token }}
+          AUDIT_MODE: ${{ inputs.mode }}
+          AUDIT_TOKEN: ${{ secrets.AUDIT_READ_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           AUDIT_OUTPUT: audit-output
         run: node scripts/audit-repositories.mjs
       - name: Upload report even if an API error occurred
