@@ -1,0 +1,51 @@
+name: Release shared workflows
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Semantic version without v, e.g. 1.0.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate version and release target
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::Version must be N.N.N"; exit 1; }
+          tag="workflows-v$VERSION"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            echo "::error::Release tag $tag already exists; do not move existing tags"
+            exit 1
+          fi
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "::error::Only main may be released"
+            exit 1
+          fi
+      - name: Publish immutable release tag
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          gh release create "workflows-v$VERSION" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Shared Workflows v$VERSION" \
+            --generate-notes
+          echo "Release created at $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
