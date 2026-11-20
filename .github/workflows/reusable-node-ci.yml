@@ -62,19 +62,19 @@ jobs:
         if: inputs.run-lint
         env:
           PACKAGE_MANAGER: ${{ inputs.package-manager }}
-        run: "$PACKAGE_MANAGER" run lint
+        run: '"$PACKAGE_MANAGER" run lint'
       - name: Typecheck
         if: inputs.run-typecheck
         env:
           PACKAGE_MANAGER: ${{ inputs.package-manager }}
-        run: "$PACKAGE_MANAGER" run typecheck
+        run: '"$PACKAGE_MANAGER" run typecheck'
       - name: Test
         if: inputs.run-tests
         env:
           PACKAGE_MANAGER: ${{ inputs.package-manager }}
-        run: "$PACKAGE_MANAGER" run test
+        run: '"$PACKAGE_MANAGER" run test'
       - name: Build
         if: inputs.run-build
         env:
           PACKAGE_MANAGER: ${{ inputs.package-manager }}
-        run: "$PACKAGE_MANAGER" run build
+        run: '"$PACKAGE_MANAGER" run build'
