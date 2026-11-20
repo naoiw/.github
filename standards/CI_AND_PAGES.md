@@ -47,3 +47,13 @@
 - 共通CIは `contents: read` のみで動作し、Pagesのbuildジョブもread-onlyです。deployジョブだけ `pages: write` と `id-token: write` を必要とします。呼び出し側では再利用workflowの権限要求を満たす必要があります。
 - 同期workflowはPR作成のため `contents: write` と `pull-requests: write` が必要ですが、リポジトリ設定によるPR作成可否の制限も別途存在します。
 - `ubuntu-latest` で新しいGitHub-hosted runnerを使用します。self-hosted runnerに置き換える際はNode 24で動作するGitHub Actionsが要求するRunnerの最小バージョンを満たすこと。
+
+### 更新後の実地検証（2026-11-20）
+
+共通ワークフローの `actions/checkout@v6` / `actions/setup-node@v6` への更新を、`geo-quiz` の一時的な試験ブランチから、マージ前の共通ワークフロー参照で検証しました。
+
+- [共通Node CI](https://github.com/naoiw/geo-quiz/actions/runs/44749655417)：npm install、Lint、型チェック、テスト、ビルドがすべて成功。
+- [共通Pages dry-run](https://github.com/naoiw/geo-quiz/actions/runs/44749655367)：mainのビルドとArtifact作成に成功。公開ジョブはスキップ。
+- 使った一時的なworkflowは試験ブランチから削除しました。本番公開処理は変更していません。
+
+pnpmおよびmain+developのPages dry-runは旧アクション版で成功済みですが、**今回のv6更新後のその組み合わせは未検証**です。対象リポジトリへの実移行時に再検証してください。
