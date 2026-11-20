@@ -12,6 +12,12 @@ test("exports standalone starter and managed instructions without placeholders",
     await exportTemplate({ name: "my-site", owner: "naoiw", output, display: "新しいアプリ", year: "2026" });
     const pkg = JSON.parse(await readFile(join(output, "package.json"), "utf8"));
     assert.equal(pkg.name, "my-site");
+    assert.equal(pkg.packageManager, "pnpm@9.14.2");
+    const lock = await readFile(join(output, "pnpm-lock.yaml"), "utf8");
+    assert.match(lock, /lockfileVersion/);
+    const readme = await readFile(join(output, "README.md"), "utf8");
+    assert.match(readme, /https:\/\/naoiw\.github\.io\/my-site\//);
+    assert.match(readme, /\| 環境 \| ブランチ \| URL \| 状態 \|/);
     const index = await readFile(join(output, "index.html"), "utf8");
     assert.match(index, /新しいアプリ/);
     const license = await readFile(join(output, "LICENSE"), "utf8");

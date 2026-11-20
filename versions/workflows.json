@@ -2,14 +2,14 @@
   "schema_version": 1,
   "owner": "naoiw",
   "repository": ".github",
-  "recommended_commit": "3f1b5f2dedeca0bbdd2cf640b4ab189fa28b77fb",
-  "tag": null,
-  "status": "verified-commit",
-  "verified_on": "2026-11-20",
+  "recommended_commit": "2803c2939d96544d9243244686dad8e58b7b78b6",
+  "tag": "workflows-v1.0.0",
+  "status": "released",
+  "verified_on": "2026-11-21",
   "workflows": [
     "reusable-node-ci.yml",
     "reusable-vite-pages.yml",
     "reusable-sync-ai-rules.yml"
   ],
-  "note": "Commit verified in .github CI, geo-quiz Node CI, and Pages dry-run. No semantic version tag is published yet."
+  "note": "Shared Workflows v1.0.0 was successfully published by workflow_dispatch; release commit matches .github PR #4 merged main. Previously verified reusable workflows remain SHA pinned."
 }
