@@ -21,6 +21,31 @@ dependabot = YAML.load_file(".github/dependabot.yml")
 abort "Dependabot configuration missing" unless dependabot.fetch("version", nil) == 2 &&
   dependabot.fetch("updates", []).size >= 2
 
+# Guard against bundling breaking major upgrades into large PRs.
+expected = {
+  "github-actions" => "/",
+  "npm" => "/templates/web-react"
+}
+expected.each do |ecosystem, directory|
+  entry = dependabot.fetch("updates").find do |update|
+    update["package-ecosystem"] == ecosystem && update["directory"] == directory
+  end
+  abort "Missing Dependabot #{ecosystem} in #{directory}" unless entry
+  abort "Dependabot must not auto-merge" if entry["automerge"]
+  abort "Dependabot must check monthly" unless entry.dig("schedule", "interval") == "monthly"
+  abort "Dependabot timezone must be JST" unless entry.dig("schedule", "timezone") == "Asia/Tokyo"
+  groups = entry.fetch("groups", {}).values
+  abort "Missing routine minor/patch group for #{ecosystem}" unless groups.any? do |group|
+    group["applies-to"] == "version-updates" &&
+      group["patterns"] == ["*"] &&
+      group["update-types"].sort == %w[minor patch]
+  end
+end
+
+template_dependabot = YAML.load_file("templates/web-react/.github/dependabot.yml")
+abort "React starter Dependabot config missing" unless template_dependabot["version"] == 2 &&
+  template_dependabot.fetch("updates", []).any? { |u| u["package-ecosystem"] == "npm" && u["directory"] == "/" }
+
 Dir[".github/workflows/*.yml"].each do |file|
   YAML.parse_file(file) || abort("#{file}: empty YAML")
 end
@@ -74,6 +99,7 @@ required = %w[
   .github/workflows/audit-repositories.yml
   .github/workflows/release-shared-workflows.yml
   .github/dependabot.yml
+  templates/web-react/.github/dependabot.yml
   scripts/sync-agent-rules.mjs
   scripts/test-sync-agent-rules.mjs
   templates/agent-bundle/AGENTS.md

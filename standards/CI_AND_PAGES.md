@@ -56,4 +56,8 @@
 - [共通Pages dry-run](https://github.com/naoiw/geo-quiz/actions/runs/44749655367)：mainのビルドとArtifact作成に成功。公開ジョブはスキップ。
 - 使った一時的なworkflowは試験ブランチから削除しました。本番公開処理は変更していません。
 
-pnpmおよびmain+developのPages dry-runは旧アクション版で成功済みですが、**今回のv6更新後のその組み合わせは未検証**です。対象リポジトリへの実移行時に再検証してください。
+### Actions更新後の追加検証（2026-11-21）
+
+- [geo-quiz：Actions v7系のnpm CI](https://github.com/naoiw/geo-quiz/actions/runs/44766295987) と [Pages dry-run](https://github.com/naoiw/geo-quiz/actions/runs/44766295965) は成功。Pagesのdeploy jobはスキップ。
+- [cycling-map：Actions v7系のpnpm CI](https://github.com/naoiw/cycling-map/actions/runs/44769078977) と [main+develop Pages dry-run](https://github.com/naoiw/cycling-map/actions/runs/44769078973) は成功。Pagesのdeploy jobはスキップ。
+- 一時検証ワークフローは削除済みです。**これらの結果をもって、未リリースのmain SHAへの本番利用先の自動切替は行いません**。次期共通workflowリリース時に再確認してください。

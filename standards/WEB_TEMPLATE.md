@@ -46,3 +46,9 @@ GitHub Pagesの設定が未完了のまま自動デプロイすると、Actions�
 GitHubの「Use this template」で新規リポジトリを作ると、ルートの`README.md`もそのまま複製されます。`__DISPLAY_NAME__`、`__OWNER__`、`__PROJECT_NAME__`は自動置換されないため、生成先でアプリ名・概要・本番URL・任意のdevelopプレビューURLなどを書き換えてください。
 
 新規React/Viteアプリはpnpm 9.14.2を使用し、`pnpm-lock.yaml`をコミットします。CIは`pnpm install --frozen-lockfile`です。既存アプリのnpm等を一律変更するものではありません。
+
+## 依存更新とセキュリティ設定
+
+`templates/web-react/.github/dependabot.yml` は、`scripts/export-web-template.mjs` の出力にも `Use this template` で作成した独立リポジトリにも含まれます。依存はpnpm管理ですがDependabotのエコシステム指定は `npm` です。定期更新はminor/patchのみグループ化し、majorは別PRで確認します。自動マージしません。
+
+新規リポジトリのGitHub側で `Dependabot alerts`、`Dependabot security updates`、`Dependency graph` が有効か別途確認してください。共通workflowの参照SHAはリリース後にレビューして変更してください。

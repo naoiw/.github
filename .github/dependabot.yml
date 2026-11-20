@@ -1,5 +1,6 @@
 version: 2
 updates:
+  # Only routine minor/patch updates are grouped. Major updates get separate PRs.
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -8,10 +9,12 @@ updates:
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 5
     groups:
-      github-actions:
-        patterns:
-          - "*"
+      actions-routine:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
 
+  # Dependabot uses the npm ecosystem for pnpm package.json/pnpm-lock.yaml.
   - package-ecosystem: "npm"
     directory: "/templates/web-react"
     schedule:
@@ -20,6 +23,7 @@ updates:
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 5
     groups:
-      react-starter:
-        patterns:
-          - "*"
+      react-routine:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
