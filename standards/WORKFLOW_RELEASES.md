@@ -30,6 +30,19 @@
 
 [監査の手順](REPOSITORY_AUDIT.md) で、推奨SHAと各リポジトリの参照先を比較します。出力される更新候補をレビューし、対象リポジトリごとに独立したPRで反映します。自動マージは禁止です。
 
+## 次期リリース候補（未発行）
+
+現在のmainには `actions/checkout@v7`、`actions/setup-node@v7`、`pnpm/action-setup@v6`、更新後のPages関連Actionsが含まれています。`workflows-v1.0.0` を書き換えることは**禁止**です。
+
+次期リリース候補は `workflows-v1.1.0`（既存入力との後方互換が保たれる場合）とします。リリース前に次を確認してください。
+
+1. 最新main SHAと `Validate shared standards` の成功を確認する。
+2. [geo-quizの共通npm CI](https://github.com/naoiw/geo-quiz/actions/runs/44766295987) と [Pages dry-run](https://github.com/naoiw/geo-quiz/actions/runs/44766295965)、[cycling-mapの共通pnpm CI](https://github.com/naoiw/cycling-map/actions/runs/44769078977) と [main+develop Pages dry-run](https://github.com/naoiw/cycling-map/actions/runs/44769078973) の実績を参照する。必要なら最新main SHAを固定して再試験する。
+3. Runner要件、GitHub Actionsの権限、既存 `workflow_call` 入力の互換性を再確認する。
+4. 明示的なリリース判断後、Actions → `Release shared workflows` → `Run workflow` に `1.1.0` を指定する。ここでは**自動リリースしない**。
+5. リリースSHAと実際のRelease/tagを確認し、`versions/workflows.json` の変更を別PRとして作る。
+6. 利用リポジトリの参照SHAを各々PRで更新し、CIと実デプロイ／dry-runを確認する。自動マージしない。
+
 ## 公開済みのリリース
 
 - [Shared Workflows v1.0.0](https://github.com/naoiw/.github/releases/tag/workflows-v1.0.0)（2026-11-21確認）: commit `2803c2939d96544d9243244686dad8e58b7b78b6`
