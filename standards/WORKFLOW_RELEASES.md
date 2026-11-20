@@ -29,3 +29,9 @@
 ## 監査と更新PR
 
 [監査の手順](REPOSITORY_AUDIT.md) で、推奨SHAと各リポジトリの参照先を比較します。出力される更新候補をレビューし、対象リポジトリごとに独立したPRで反映します。自動マージは禁止です。
+
+## 公開済みのリリース
+
+- [Shared Workflows v1.0.0](https://github.com/naoiw/.github/releases/tag/workflows-v1.0.0)（2026-11-21確認）: commit `2803c2939d96544d9243244686dad8e58b7b78b6`
+- Releasesのタグは運用上**移動・上書きしない**でください。GitHub上のReleaseが技術的にimmutableに設定されていることを意味しません。
+- 今後の推奨参照SHAは `versions/workflows.json` で管理します。既存プロジェクトのSHAは自動では更新しません。
