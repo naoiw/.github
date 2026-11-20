@@ -1,0 +1,80 @@
+name: Reusable Node CI
+
+on:
+  workflow_call:
+    inputs:
+      package-manager:
+        description: "npm or pnpm; match the caller repository"
+        type: string
+        default: npm
+      node-version:
+        type: string
+        default: "26"
+      pnpm-version:
+        type: string
+        default: "10"
+      run-lint:
+        type: boolean
+        default: true
+      run-typecheck:
+        type: boolean
+        default: false
+      run-tests:
+        type: boolean
+        default: true
+      run-build:
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check package manager
+        shell: bash
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+        run: |
+          case "$PACKAGE_MANAGER" in npm|pnpm) ;; *) echo "Unsupported package manager: $PACKAGE_MANAGER"; exit 1 ;; esac
+      - uses: pnpm/action-setup@v4
+        if: inputs.package-manager == 'pnpm'
+        with:
+          version: ${{ inputs.pnpm-version }}
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+      - name: Install locked dependencies
+        shell: bash
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+        run: |
+          if [ "$PACKAGE_MANAGER" = "pnpm" ]; then
+            pnpm install --frozen-lockfile
+          else
+            npm ci --no-audit --no-fund
+          fi
+      - name: Lint
+        if: inputs.run-lint
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+        run: "$PACKAGE_MANAGER" run lint
+      - name: Typecheck
+        if: inputs.run-typecheck
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+        run: "$PACKAGE_MANAGER" run typecheck
+      - name: Test
+        if: inputs.run-tests
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+        run: "$PACKAGE_MANAGER" run test
+      - name: Build
+        if: inputs.run-build
+        env:
+          PACKAGE_MANAGER: ${{ inputs.package-manager }}
+        run: "$PACKAGE_MANAGER" run build

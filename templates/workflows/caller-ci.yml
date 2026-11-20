@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    uses: naoiw/.github/.github/workflows/reusable-node-ci.yml@main
+    with:
+      package-manager: npm
+      node-version: "26"
+      run-lint: true
+      run-typecheck: true
+      run-tests: true
+      run-build: true
+
+# Example only. Copy to the target repository's .github/workflows directory.
+# Remove develop triggers if that branch is not used.
+# For production use, pin reusable workflows to an immutable commit SHA or managed release tag.

@@ -1,0 +1,25 @@
+name: Deploy Pages (main only)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pages:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: naoiw/.github/.github/workflows/reusable-vite-pages.yml@main
+    with:
+      package-manager: npm
+      node-version: "26"
+      publish-preview: false
+
+# Example only. Copy to the target repository's .github/workflows directory.
+# Set repository Settings > Pages > Build and deployment: GitHub Actions.
+# Pin the reusable workflow ref to a commit SHA or managed release tag in production.
