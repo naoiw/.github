@@ -1,0 +1,27 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "02:42"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/templates/web-react"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "03:42"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 5
+    groups:
+      react-starter:
+        patterns:
+          - "*"
