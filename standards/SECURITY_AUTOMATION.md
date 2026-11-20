@@ -39,7 +39,7 @@ GitHubの **Settings → Advanced Security**（画面の名称はプランによ
 
 - Actionsのmajor更新（例：checkout、setup-node、pnpm/action-setup、Pages系）は単独PRでレビューし、GitHub Runner/Nodeの互換性・権限・Artifacts・Pagesのdry-runを確認します。
 - 共有workflowの `@<40桁SHA>` は `versions/workflows.json` の検証済み推奨SHAを利用するのが基本です。SHA更新は別PRで扱います。
-- `workflows-v1.0.0` は公開済みですが、現在のmainは更新後のActionsを含みます。**次期リリースは未発行**です。新バージョンの検証とリリース手順は [WORKFLOW_RELEASES.md](WORKFLOW_RELEASES.md) に従ってください。
+- `workflows-v1.1.0` は検証後に公開済みです（推奨SHAは `versions/workflows.json`）。v1.0.0も維持します。既存リポジトリは自動で更新されないため、個別PRでCI・Pagesを確認してから移行してください。詳細は [WORKFLOW_RELEASES.md](WORKFLOW_RELEASES.md) を参照してください。
 - 既存利用リポジトリはSHA固定のため、共通原本の更新だけでは切り替わりません。
 
 ## Secretsと最小権限
