@@ -1,8 +1,6 @@
 name: Audit naoiw repositories
 
 on:
-  push:
-    branches: [feature/workflow-governance-and-audit]
   workflow_dispatch:
     inputs:
       mode:
