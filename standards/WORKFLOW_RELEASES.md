@@ -30,21 +30,21 @@
 
 [監査の手順](REPOSITORY_AUDIT.md) で、推奨SHAと各リポジトリの参照先を比較します。出力される更新候補をレビューし、対象リポジトリごとに独立したPRで反映します。自動マージは禁止です。
 
-## 次期リリース候補（未発行）
+## v1.1.0 検証と先行展開
 
-現在のmainには `actions/checkout@v7`、`actions/setup-node@v7`、`pnpm/action-setup@v6`、更新後のPages関連Actionsが含まれています。`workflows-v1.0.0` を書き換えることは**禁止**です。
-
-次期リリース候補は `workflows-v1.1.0`（既存入力との後方互換が保たれる場合）とします。リリース前に次を確認してください。
-
-1. 最新main SHAと `Validate shared standards` の成功を確認する。
-2. [geo-quizの共通npm CI](https://github.com/naoiw/geo-quiz/actions/runs/44766295987) と [Pages dry-run](https://github.com/naoiw/geo-quiz/actions/runs/44766295965)、[cycling-mapの共通pnpm CI](https://github.com/naoiw/cycling-map/actions/runs/44769078977) と [main+develop Pages dry-run](https://github.com/naoiw/cycling-map/actions/runs/44769078973) の実績を参照する。必要なら最新main SHAを固定して再試験する。
-3. Runner要件、GitHub Actionsの権限、既存 `workflow_call` 入力の互換性を再確認する。
-4. 明示的なリリース判断後、Actions → `Release shared workflows` → `Run workflow` に `1.1.0` を指定する。ここでは**自動リリースしない**。
-5. リリースSHAと実際のRelease/tagを確認し、`versions/workflows.json` の変更を別PRとして作る。
-6. 利用リポジトリの参照SHAを各々PRで更新し、CIと実デプロイ／dry-runを確認する。自動マージしない。
+- [v1.1.0 Release](https://github.com/naoiw/.github/releases/tag/workflows-v1.1.0) は、[手動リリース実行](https://github.com/naoiw/.github/actions/runs/44786154325) によって公開済みです。
+- リリースタグが指すコミット：`00047e65d7e53551e2644df02d2f22743ea2c471`（リリース時点のmainと一致）。v1.0.0は移動・上書きしません。
+- [共通規約のmain検証](https://github.com/naoiw/.github/actions/runs/44782447044)：成功。
+- [geo-quiz: npm Node CI](https://github.com/naoiw/geo-quiz/actions/runs/44784096096)、[Pages dry-run](https://github.com/naoiw/geo-quiz/actions/runs/44784096255)：成功。Pagesの公開ジョブはスキップ、Artifact生成済み。
+- [cycling-map: pnpm Node CI](https://github.com/naoiw/cycling-map/actions/runs/44784082245)、[main+develop Pages dry-run](https://github.com/naoiw/cycling-map/actions/runs/44784082659)：成功。Pagesの公開ジョブはスキップ、Artifact生成済み。
+- [geo-quiz pilot PR #63](https://github.com/naoiw/geo-quiz/pull/63) の[PR CI](https://github.com/naoiw/geo-quiz/actions/runs/44784766406) と [cycling-map pilot PR #23](https://github.com/naoiw/cycling-map/pull/23) の[PR CI](https://github.com/naoiw/cycling-map/actions/runs/44784776413) も成功。
+- 両pilot PRはCI参照SHAのみ変更します。本番Pagesのworkflowは変更せず、**各PRを明示的にレビュー・マージ後にmain CIと本番Pagesを確認する**運用です。
+- 同期用`reusable-sync-ai-rules.yml`についてはcheckout/setup-nodeの更新を確認していますが、書き込みを伴う同期PR作成の実地試験は今回のpilot対象外です。
+- [リリース管理Issue #12](https://github.com/naoiw/.github/issues/12) に続く展開状況を記録します。
 
 ## 公開済みのリリース
 
+- [Shared Workflows v1.1.0](https://github.com/naoiw/.github/releases/tag/workflows-v1.1.0)（2026-11-21確認）: commit `00047e65d7e53551e2644df02d2f22743ea2c471`
 - [Shared Workflows v1.0.0](https://github.com/naoiw/.github/releases/tag/workflows-v1.0.0)（2026-11-21確認）: commit `2803c2939d96544d9243244686dad8e58b7b78b6`
 - Releasesのタグは運用上**移動・上書きしない**でください。GitHub上のReleaseが技術的にimmutableに設定されていることを意味しません。
 - 今後の推奨参照SHAは `versions/workflows.json` で管理します。既存プロジェクトのSHAは自動では更新しません。
